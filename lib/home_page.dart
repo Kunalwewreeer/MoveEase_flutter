@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'maps_page.dart';
+import 'home/profile.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+
   // Example username
   String username = "Alex";
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 1) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MapsScreen()));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +26,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.menu, size: 30), // Increased icon size
             onPressed: () {
-              // Action for the menu button
+              _showOptionsModalBottomSheet(context);// Action for the menu button
             },
           ),
         ],
@@ -93,12 +86,48 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class ProfilePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Profile")),
-      body: Center(child: Text("Profile Page", style: TextStyle(fontSize: 24))),
-    );
-  }
+void _showOptionsModalBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext bc) {
+      return SafeArea(
+        child: Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () => {
+                Navigator.pop(context),
+                // Handle navigation or functionality for Settings
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.help),
+              title: Text('Help and Feedback'),
+              onTap: () => {
+                Navigator.pop(context),
+                // Handle navigation or functionality for Help and Feedback
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.privacy_tip),
+              title: Text('Privacy Policy'),
+              onTap: () => {
+                Navigator.pop(context),
+                // Handle navigation or functionality for Privacy Policy
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info_outline),
+              title: Text('About Us'),
+              onTap: () => {
+                Navigator.pop(context),
+                // Handle navigation or functionality for About Us
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

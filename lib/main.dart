@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'home_page.dart';
+import 'maps_page.dart';
+import 'main_screen.dart';
+import 'sos_page.dart';
+import 'controls_page.dart';
 void main() {
   runApp(MyApp());
 }
@@ -37,7 +41,7 @@ class _LoginFormState extends State<LoginForm> {
       print('Email: ${_emailController.text}, Password: ${_passwordController.text}');
           Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => MainScreen()),
     );
       // Here you can add your login logic
     }

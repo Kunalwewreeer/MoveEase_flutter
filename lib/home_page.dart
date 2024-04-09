@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
+import 'maps_page.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -14,6 +15,9 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
+    if (index == 1) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MapsScreen()));
+    }
   }
 
   @override
@@ -40,13 +44,15 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             SizedBox(height: 40), // More space from the top
             Container(
-              height: 300, // Increased height for a squarish shape
+              height: 300,
               margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
               decoration: BoxDecoration(
-                color: Colors.blueAccent[100],
-                borderRadius: BorderRadius.circular(20), // Rounded corners
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: AssetImage('assets/images/wheelchair_autocad1.png'), // Use your actual image path here
+                  fit: BoxFit.cover, // This ensures the image covers the container, you can adjust as needed
+                ),
               ),
-              child: Center(child: Text('Animation Placeholder', style: TextStyle(color: Colors.white, fontSize: 24))),
             ),
             Card(
               elevation: 4,
@@ -81,19 +87,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notifications'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        selectedItemColor: Colors.blue[800],
-        unselectedItemColor: Colors.blueGrey,
-        type: BottomNavigationBarType.fixed,
-      ),
+
+
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-
+import 'sos/call_initiation.dart';
 class SOSActivationPage extends StatefulWidget {
   @override
   _SOSActivationPageState createState() => _SOSActivationPageState();
@@ -18,7 +18,7 @@ class _SOSActivationPageState extends State<SOSActivationPage> {
         if (_start == 0) {
           setState(() {
             timer.cancel();
-            // Timer reaches 0, proceed with SOS action
+            navigateToCallInitiation('SOS');// Timer reaches 0, proceed with SOS action
           });
         } else {
           setState(() {
@@ -40,20 +40,26 @@ class _SOSActivationPageState extends State<SOSActivationPage> {
     _timer?.cancel();
     super.dispose();
   }
+void navigateToCallInitiation(String featureName) {
+  Navigator.of(context).push(MaterialPageRoute(
+    builder: (context) => CallInitiationPage(featureName: featureName),
+  ));
+}
 
-  Widget emergencyButton(String label, IconData icon, Color color, VoidCallback onPressed) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, size: 48),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        primary: color,
-        onPrimary: Colors.white,
-        minimumSize: Size(180, 80),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      ),
-    );
-  }
+Widget emergencyButton(String label, IconData icon, Color color) {
+  return ElevatedButton.icon(
+    onPressed: () => navigateToCallInitiation(label),
+    icon: Icon(icon, size: 48),
+    label: Text(label),
+    style: ElevatedButton.styleFrom(
+      primary: color,
+      onPrimary: Colors.white,
+      minimumSize: Size(180, 80),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+    ),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +90,10 @@ class _SOSActivationPageState extends State<SOSActivationPage> {
               runSpacing: 20, // gap between lines
               alignment: WrapAlignment.spaceBetween,
               children: <Widget>[
-                emergencyButton("Medical", Icons.local_hospital, Colors.blue, () {/* Navigate to Medical page */}),
-                emergencyButton("Repairs", Icons.build, Colors.green, () {/* Navigate to Repairs page */}),
-                emergencyButton("Abuse", Icons.report_problem, Colors.orange, () {/* Navigate to Abuse page */}),
-                emergencyButton("Others", Icons.more_horiz, Colors.grey, () {/* Navigate to Others page */}),
+                emergencyButton("Medical", Icons.local_hospital, Colors.blue ),
+                emergencyButton("Repairs", Icons.build, Colors.green ),
+                emergencyButton("Abuse", Icons.report_problem, Colors.orange ),
+                emergencyButton("Others", Icons.more_horiz, Colors.grey),
               ],
             ),
           ],

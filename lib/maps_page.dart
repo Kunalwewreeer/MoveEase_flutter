@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsScreen extends StatefulWidget {
   @override
@@ -10,15 +11,52 @@ class _MapsScreenState extends State<MapsScreen> {
   final TextEditingController _sourceController = TextEditingController();
   final TextEditingController _destinationController = TextEditingController();
   List<String> _navigationHistory = [];
+  final LatLng _center = const LatLng(19.1331, 72.9151);
+  late GoogleMapController _mapController;
 
-  void _onNavigate() {
-    if (_destinationController.text.isNotEmpty) {
-      setState(() {
-        _navigationHistory.add(_destinationController.text);
-        _destinationController.clear();
-      });
-    }
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+        _mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(19.1331, 72.9151), // Example target location
+        zoom: 13.0,
+      ),
+        ));
+    
   }
+
+  Future<void> _moveToSearchLocation() async {
+    _mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(19.1331, 72.9151), // Example target location
+        zoom: 15.0,
+      ),
+    ));
+  }
+
+  void _onNavigateButtonPressed() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => _buildBottomNavigationMenu(),
+    );
+  }
+void _onNavigate() {
+  if (_destinationController.text.isNotEmpty) {
+    setState(() {
+      // Add the destination to the navigation history
+      _navigationHistory.add(_destinationController.text);
+      // Optionally, clear the destination controller if you want the user to enter a new destination next time
+      _destinationController.clear();
+    });
+    // After updating the state to include the new destination in the history,
+    // you may want to close the bottom sheet or navigate to the destination.
+    // Here's how you might close the bottom sheet:
+    Navigator.pop(context);
+    // Then, you could potentially navigate to the destination on the map
+    // This is where you'd include logic to actually use the destination for navigation
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -30,46 +68,27 @@ class _MapsScreenState extends State<MapsScreen> {
             hintText: 'Search here...',
             suffixIcon: IconButton(
               icon: Icon(Icons.search),
-              onPressed: () => print('Searching: ${_searchController.text}'),
+              onPressed: () => _moveToSearchLocation(),
             ),
           ),
         ),
       ),
       body: Stack(
-        children: <Widget>[
-          Positioned.fill(
-            child: Image.asset('assets/images/maps.png', fit: BoxFit.cover),
-          ),
-          Positioned(
-            //top: AppBar().preferredSize.height + MediaQuery.of(context).padding.top,
-            left: 0,
-            right: 0,
-            child: Container(
-              color: Colors.white54,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(icon: Icon(Icons.account_balance), onPressed: () {}),
-                  IconButton(icon: Icon(Icons.wc), onPressed: () {}),
-                  IconButton(icon: Icon(Icons.local_hospital), onPressed: () {}),
-                  IconButton(icon: Icon(Icons.battery_charging_full), onPressed: () {}),
-                ],
-              ),
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: _center,
+              zoom: 11.0,
             ),
           ),
           Positioned(
             right: 20,
             bottom: 20,
             child: FloatingActionButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => _buildBottomNavigationMenu(),
-                );
-              },
+              onPressed: _onNavigateButtonPressed,
               child: Icon(Icons.navigation),
-              tooltip: 'Navigate',
+              backgroundColor: Colors.blue,
             ),
           ),
         ],
@@ -80,13 +99,25 @@ class _MapsScreenState extends State<MapsScreen> {
   Widget _buildBottomNavigationMenu() {
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.75, // The initial size of the sheet when it is first opened
-      minChildSize: 0.5, // The minimum size of the sheet when it is dragged down
-      maxChildSize: 0.95, // Sheet can expand to 95% of the screen height
+      initialChildSize: 0.9, // Expanded to take more screen space
       builder: (_, controller) => Container(
         padding: EdgeInsets.all(20),
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                Text('Navigation', style: Theme.of(context).textTheme.headline6),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
             ListTile(
               leading: Icon(Icons.my_location),
               title: TextField(
@@ -105,6 +136,7 @@ class _MapsScreenState extends State<MapsScreen> {
               onPressed: _onNavigate,
               child: Text('Navigate'),
             ),
+
             Expanded(
               child: ListView.builder(
                 controller: controller, // This connects the ListView to the DraggableScrollableSheet controller
@@ -112,6 +144,10 @@ class _MapsScreenState extends State<MapsScreen> {
                 itemBuilder: (context, index) => ListTile(
                   leading: Icon(Icons.history),
                   title: Text(_navigationHistory[index]),
+                  trailing: Icon(Icons.navigation),
+                  onTap: () {
+                    // Implement onTap to use this history item for navigation
+                  },
                 ),
               ),
             ),

@@ -41,6 +41,7 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.warning), label: 'SOS'),
         ],
         currentIndex: _selectedIndex,
+        selectedItemColor: Color(0xFF67C2BF), // Set the selected item color
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),

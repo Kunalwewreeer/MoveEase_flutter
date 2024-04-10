@@ -8,106 +8,106 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  String username = "Alex"; // Example username
+  String username = "Naina"; // Example username
+
+  // Data for each information card
+  final List<Map<String, dynamic>> infoCards = [
+    {'title': 'Battery', 'value': '92%', 'icon': Icons.battery_full},
+    {'title': 'Sensors', 'value': 'Good', 'icon': Icons.sensor_door},
+    {'title': 'Electronics', 'value': 'Good', 'icon': Icons.electrical_services},
+    {'title': 'Device', 'value': 'Not Connected', 'icon': Icons.phonelink_off},
+  ];
 
   @override
   Widget build(BuildContext context) {
-    Color themeColor = Colors.deepPurple; // Defining a theme color
+    Color themeColor = const Color(0xFF67C2BF); // Defining a theme color
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hello, $username', style: TextStyle(fontSize: 20,color: Colors.white)),
+        title: Text('Hello, $username', style: TextStyle(fontSize: 20, color: Color(0xFFF5F2E8))),
         backgroundColor: themeColor, // Using the theme color
         leading: IconButton(
-          icon: Icon(Icons.account_circle, size: 30),
+          icon: Icon(Icons.account_circle, size: 40),
           onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage())),
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.menu, size: 30),
+            icon: Icon(Icons.menu, size: 40),
             onPressed: () => _showOptionsModalBottomSheet(context),
           ),
         ],
         centerTitle: true,
       ),
-      body: AnimatedBackground(
-        behaviour: RandomParticleBehaviour(
-          options: ParticleOptions(
-            baseColor: themeColor,
-            spawnOpacity: 0.0,
-            opacityChangeRate: 0.25,
-            minOpacity: 0.1,
-            maxOpacity: 0.4,
-            particleCount: 50,
-          ),
-        ),
-        vsync: this,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 40),
-              Container(
-                height: 300,
-                margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/wheelchair_autocad1.png'),
-                    fit: BoxFit.cover,
-                  ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/wheelchair_autocad1.jpg'),
+                  fit: BoxFit.cover,
                 ),
               ),
-              _buildInformationCard(themeColor),
-            ],
+            ),
           ),
-        ),
+          Container(
+            height: 120,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: infoCards.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () => _showSensitivityPopup(context, infoCards[index]['title']),
+                  child: Card(
+                    child: Container(
+                      width: 150,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(infoCards[index]['icon'], size: 40),
+                          Text(infoCards[index]['title']),
+                          Text(infoCards[index]['value']),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildInformationCard(Color themeColor) => Card(
-    elevation: 4,
-    margin: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-    child: Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [themeColor.withOpacity(0.5), themeColor],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Row(
-          children: [
-            // Expanded(
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       _buildInfoText('Battery: 92%', themeColor),
-            //       _buildInfoText('Sensors: Good', themeColor),
-            //     ],
-            //   ),
-            // ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoText('Battery:             92%', Color.fromARGB(255, 118, 34, 68)),
-                  _buildInfoText('Sensors:          Good', Color.fromARGB(255, 8, 16, 134)),
-                  _buildInfoText('Electronics:    Good', Colors.yellow.shade700),
-                  _buildInfoText('Device:           Not Connected', Color.fromARGB(255, 47, 56, 159)),
-                  _buildInfoText('Mode:             Manual', Colors.green),
-                ],
-              ),
+  void _showSensitivityPopup(BuildContext context, String title) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("$title Sensitivity"),
+          content: Slider(
+            value: 50,
+            min: 0,
+            max: 100,
+            divisions: 5,
+            label: 'Sensitivity',
+            onChanged: (double value) {},
+          ),
+          actions: <Widget>[
+            FloatingActionButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           ],
-        ),
-      ),
-    ),
-  );
+        );
+      },
+    );
+  }
+
 
   Widget _buildInfoText(String text, Color color) => Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       text,
       style: TextStyle(
         fontSize: 20,
-        fontFamily: 'Open Sans',
+        //fontFamily: 'Open Sans',
         color: color,
       ),
     ),

@@ -111,7 +111,7 @@ void _onNavigate() {
                   icon: Icon(Icons.arrow_back),
                   onPressed: () => Navigator.pop(context),
                 ),
-                Text('Navigation', style: Theme.of(context).textTheme.headline6),
+                Text('Navigation', style: Theme.of(context).textTheme.titleLarge),
                 IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),

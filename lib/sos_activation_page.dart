@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'sos/call_initiation.dart';
+
 class SOSActivationPage extends StatefulWidget {
   @override
   _SOSActivationPageState createState() => _SOSActivationPageState();
@@ -40,31 +41,34 @@ class _SOSActivationPageState extends State<SOSActivationPage> {
     _timer?.cancel();
     super.dispose();
   }
-void navigateToCallInitiation(String featureName) {
-  Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => CallInitiationPage(featureName: featureName),
-  ));
-}
 
-Widget emergencyButton(String label, IconData icon, Color color) {
-  return ElevatedButton.icon(
-    onPressed: () => navigateToCallInitiation(label),
-    icon: Icon(icon, size: 48),
-    label: Text(label),
-    style: ElevatedButton.styleFrom(
-      primary: color,
-      onPrimary: Colors.white,
-      minimumSize: Size(180, 80),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-    ),
-  );
-}
+  void navigateToCallInitiation(String featureName) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CallInitiationPage(featureName: featureName),
+    ));
+  }
 
+  Widget emergencyButton(String label, IconData icon, Color color) {
+    return ElevatedButton.icon(
+      onPressed: () => navigateToCallInitiation(label),
+      icon: Icon(icon, size: 48),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        primary: color,
+        onPrimary: Colors.white,
+        minimumSize: Size(180, 80),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('SOS Activation')),
+      appBar: AppBar(
+        //title: Text('SOS Activation'),
+        backgroundColor: Color(0xFF67C2BF), // Using the theme color
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -79,7 +83,8 @@ Widget emergencyButton(String label, IconData icon, Color color) {
               },
               child: Text('Cancel SOS', style: TextStyle(fontSize: 20)),
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
+                primary:  Color(0xFF67C2BF),
+                onPrimary: Colors.white,
                 minimumSize: Size(double.infinity, 50), // make button width 100%
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               ),
@@ -90,9 +95,9 @@ Widget emergencyButton(String label, IconData icon, Color color) {
               runSpacing: 20, // gap between lines
               alignment: WrapAlignment.spaceBetween,
               children: <Widget>[
-                emergencyButton("Medical", Icons.local_hospital, Colors.blue ),
-                emergencyButton("Repairs", Icons.build, Colors.green ),
-                emergencyButton("Abuse", Icons.report_problem, Colors.orange ),
+                emergencyButton("Medical", Icons.local_hospital, Color(0xFFB54C62)),
+                emergencyButton("Repairs", Icons.build, Color(0xFFFFC5B5)),
+                emergencyButton("Abuse", Icons.report_problem, Color(0xFFFFE28A)),
                 emergencyButton("Others", Icons.more_horiz, Colors.grey),
               ],
             ),

@@ -11,15 +11,15 @@ class SOSPage extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)), // Rounded corners
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel', style: TextStyle(color: Colors.redAccent)),
+              child: Text('Cancel', style: TextStyle(color: Color(0xFFB54C62))),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
             ),
             ElevatedButton(
-              child: Text('Confirm'),
+              child: Text('Confirm',style: TextStyle(color: Color(0xFFF5F2E8))),
               style: ElevatedButton.styleFrom(
-                primary: Colors.red, // Button background color
+                backgroundColor: Color(0xFFB54C62), // Button background color
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), // Rounded corners
               ),
               onPressed: () {
@@ -41,23 +41,23 @@ class SOSPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('SOS'),
-        backgroundColor: Colors.red, // Emphasizes the urgency
+        backgroundColor:Color(0xFFB54C62), // Emphasizes the urgency
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(Icons.warning, size: 100, color: Colors.red),
+            Icon(Icons.warning, size: 100, color:Color(0xFFB54C62)),
             SizedBox(height: 20),
             Text(
               'Emergency SOS',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFB54C62)),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _showSOSConfirmationDialog(context),
-              child: Text('Send SOS Signal'),
-              style: ElevatedButton.styleFrom(primary: Colors.red),
+              child: Text('Send SOS Signal', style: TextStyle(color: Color(0xFFF5F2E8)),),
+              style: ElevatedButton.styleFrom(primary: Color(0xFFB54C62)),
             ),
           ],
         ),

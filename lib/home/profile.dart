@@ -25,7 +25,7 @@ class ProfilePage extends StatelessWidget {
           style: TextStyle(color: Color(0xFFE28A)),
         ),
         elevation: 0,
-        backgroundColor: Color(0xFF67C2BF),
+        backgroundColor: Color(0xFF5DA9F9),
         systemOverlayStyle: SystemUiOverlayStyle.light,
         actions: [
           IconButton(
@@ -45,7 +45,7 @@ class ProfilePage extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color(0xFF67C2BF),
+                color: Color(0xFF5DA9F9),
                 borderRadius: BorderRadius.vertical(bottom: Radius.circular(45)),
               ),
               padding: EdgeInsets.only(bottom: 30),

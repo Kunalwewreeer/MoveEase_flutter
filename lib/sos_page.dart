@@ -40,7 +40,7 @@ class SOSPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SOS'),
+        //title: Text('SOS'),
         backgroundColor:Color(0xFFB54C62), // Emphasizes the urgency
       ),
       body: Center(

@@ -67,7 +67,7 @@ class _SOSActivationPageState extends State<SOSActivationPage> {
     return Scaffold(
       appBar: AppBar(
         //title: Text('SOS Activation'),
-        backgroundColor: Color(0xFF67C2BF), // Using the theme color
+        backgroundColor: Color(0xFFB54C62), // Using the theme color
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -83,7 +83,7 @@ class _SOSActivationPageState extends State<SOSActivationPage> {
               },
               child: Text('Cancel SOS', style: TextStyle(fontSize: 20)),
               style: ElevatedButton.styleFrom(
-                primary:  Color(0xFF67C2BF),
+                primary:  Color(0xFFB54C62),
                 onPrimary: Colors.white,
                 minimumSize: Size(double.infinity, 50), // make button width 100%
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

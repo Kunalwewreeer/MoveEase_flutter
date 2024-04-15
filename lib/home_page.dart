@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
-import 'home/profile.dart'; // Make sure to use the correct path for your profile page
-import 'home/options.dart'; // Make sure to use the correct path for your options modal
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'home/profile.dart';
+import 'home/options.dart';
 import 'controls_page.dart';
-import '';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  
   String username = "Naina";
   int? selectedCardIndex;
+  BluetoothConnection? connection;
+  List<BluetoothDevice> devicesList = [];
+  bool isConnecting = true;
+  bool get isConnected => connection != null && connection!.isConnected;
+
   final List<Map<String, dynamic>> infoCards = [
     {'title': 'Battery', 'value': '92%', 'icon': Icons.battery_full},
     {'title': 'Sensors', 'value': 'Critical', 'icon': Icons.sensor_door},
@@ -21,11 +28,50 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    FlutterBluetoothSerial.instance.onStateChanged().listen((state) {
+      setState(() {});
+    });
     checkCriticalStatus();
+    fetchBondedDevices(); 
+    updateDeviceInfo();
+  }
+    void updateDeviceInfo() {
+    setState(() {
+      // Update the connection status dynamically
+      infoCards[3]['value'] = isConnected ? 'Connected' : 'Not Connected';
+    });
+  }
+
+  void fetchBondedDevices() async {
+    devicesList = await FlutterBluetoothSerial.instance.getBondedDevices();
+  }
+
+  void connectToHC05() async {
+    // Specific logic to connect to HC-05, this assumes you know the device is paired
+    BluetoothDevice? hc05Device = devicesList.firstWhere(
+      (device) => device.name == "HC-05",
+
+    );
+    updateDeviceInfo();
+    if (hc05Device != null) {
+      await BluetoothConnection.toAddress(hc05Device.address).then((_connection) {
+        print('Connected to the device');
+        setState(() {
+          connection = _connection;
+          updateDeviceInfo();  // Update device connection status dynamically
+        });
+      }).catchError((error) {
+        
+        print('Cannot connect, exception occurred');
+        print(error);
+      });
+    } else {
+      print('HC-05 device not found');
+      // Optionally, start a discovery process here or alert the user
+    }
   }
 
   void checkCriticalStatus() {
-    // Check if any card has a 'Critical' status and alert the user
     for (var card in infoCards) {
       if (card['value'] == 'Critical') {
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -34,7 +80,7 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text("Alert"),
-                content: Text("${card['title']} are in a critical status."),
+                content: Text("${card['title']} is in a critical status."),
                 actions: <Widget>[
                   TextButton(
                     child: Text('OK'),
@@ -60,7 +106,7 @@ class _HomePageState extends State<HomePage> {
             Column(
               children: <Widget>[
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.72, // Set height to 3/4th of the screen height
+                  height: MediaQuery.of(context).size.height * 0.72,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     image: DecorationImage(
@@ -77,13 +123,21 @@ class _HomePageState extends State<HomePage> {
                       itemCount: infoCards.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedCardIndex = selectedCardIndex == index ? null : index;
-                            });
-                            if (index == 1){
-                            _showSensitivityPopup(context, infoCards[index]['title']);}
-                          },
+                              onTap: () {
+                                setState(() {
+                                  selectedCardIndex = selectedCardIndex == index ? null : index;  // This toggles the selected state visually
+                                });
+                                // Check the title to determine action
+                                if (infoCards[index]['title'] == 'Sensors') {
+                                  _showSensitivityPopup(context, infoCards[index]['title']);
+                                } else if (infoCards[index]['title'] == 'Device' && !isConnected) {
+                                  updateDeviceInfo();
+                                  if(isConnected == false){
+                                  connectToHC05();  // Attempt to connect to HC-05 if not connected
+                                  }
+                                }
+                                // Add other conditions if there are more specific actions for other cards
+                              },
                           child: AnimatedContainer(
                             duration: Duration(milliseconds: 300),
                             width: selectedCardIndex == index ? 180 : 150,
@@ -135,11 +189,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _refreshData() async {
-    await Future.delayed(Duration(seconds: 2)); // Simulate a data refresh
+    await Future.delayed(Duration(seconds: 2));
     setState(() {
-      // Update your data here
+      fetchBondedDevices(); // Update the list of bonded devices on refresh
     });
   }
+}
 
   void _showSensitivityPopup(BuildContext context, String title) {
     showDialog(
@@ -213,4 +268,4 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-}
+

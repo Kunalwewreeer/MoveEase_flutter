@@ -100,7 +100,12 @@ void showVibrationOrProximityValueDialog(int flag) {
       double maxValue = flag == 0 ? 20.0 : 100.0; // Max value depends on flag
       double normalizedValue = ((currentVibrationValue - lastVibrationValue).abs() % (maxValue + 1)) / maxValue;
       String title = flag == 0 ? "Vibration" : "Proximity";
-      
+      if (flag == 1){
+        normalizedValue = currentVibrationValue/100;
+        lastVibrationValue = 0;
+        currentVibrationValue = currentVibrationValue - currentVibrationValue%100;
+     }
+     
       return AlertDialog(
         content: StatefulBuilder(
           builder: (context, setState) {
@@ -110,6 +115,7 @@ void showVibrationOrProximityValueDialog(int flag) {
             return SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
+                  
                   Text("$title: ${(currentVibrationValue - lastVibrationValue).abs()}", textAlign: TextAlign.center,),
                   SizedBox(height: 20), // Add some spacing
                   LinearProgressIndicator(

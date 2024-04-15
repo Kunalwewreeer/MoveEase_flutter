@@ -43,3 +43,5 @@ flutter:
     - assets/images/background_image.avif
     - assets/videos/bleh.mp4
     - assets/images/background2.avif
+    - assets/wheelchair_moveease.obj
+    - assets/images/moveease_mp4.mp4
